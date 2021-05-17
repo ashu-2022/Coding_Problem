@@ -4,6 +4,7 @@ using namespace std;
 vector<int>swap_array(vector<int>& v){
     int i=0;
     int j=v.size()-1;
+    //reverse(v.begin(), v.end());
     while(i<j){
         swap(v[i],v[j]);
         i++;
