@@ -1,7 +1,9 @@
 /*
 Add two numbers represented by linked lists
-[https://leetcode.com/problems/add-two-numbers/]
+[https://leetcode.com/problems/add-two-numbers-ii/]
 Approach:
+first reverse both no to get tail, then after calculate sum
+reverse the sum to return ans.
  1. By transversing LL convert nodes value in Numbers then do 
     Arithmetic Addition. Create new linked list node to 
     represent sum   T(n) = O(2(N1+N2)) and S(n) = O(N1+N2) 
@@ -18,23 +20,40 @@ Approach:
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode *dummy = new ListNode(0);
-        ListNode *newnode = dummy;
-        int sum=0;
-        while(l1||l2||sum>0){
-            if(l1){
-                sum = sum + l1->val;
-                l1 = l1->next;
+        if(!l1) return l2;
+        if(!l2) return l1;
+        ListNode *tail1 = reverse(l1);
+        ListNode *tail2 = reverse(l2);
+        ListNode *newhead = new ListNode(0);
+        ListNode *temp = newhead;
+        int carry = 0;
+        while(tail1 || tail2 || carry){
+            if(tail1){
+                carry += tail1->val;
+                tail1 = tail1->next;
             }
-            if(l2){
-                sum = sum + l2->val;
-                l2 = l2->next;
+            if(tail2){
+                carry += tail2->val;
+                tail2 = tail2->next;
             }
-            ListNode *tempnode = new ListNode(sum%10);
-            sum=sum/10;
-            dummy->next = tempnode;
-            dummy = dummy->next;
+            temp->next = new ListNode(carry%10);
+            temp = temp->next;
+            carry = carry/10;
         }
-        return newnode->next;
-    } 
+        return reverse(newhead->next);
+    }
+    
+private:
+    ListNode* reverse(ListNode* head){
+        if(!head || !head->next) return head;
+        ListNode *prev = NULL, *nxt ;
+        while(head){
+            nxt = head->next;
+            head->next = prev;
+            prev = head;
+            head = nxt;
+        }
+        return prev;
+    }
+    
 };
