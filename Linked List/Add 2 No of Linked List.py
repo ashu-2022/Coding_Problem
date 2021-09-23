@@ -1,7 +1,9 @@
 """
 Add two numbers represented by linked lists
-[https://leetcode.com/problems/add-two-numbers/]
+[https://leetcode.com/problems/add-two-numbers-ii/]
 Approach:
+first reverse both no to get tail, then after calculate sum
+reverse the sum to return ans.
  1. By transversing LL convert nodes value in Numbers then do 
     Arithmetic Addition. Create new linked list node to 
     represent sum   T(n) = O(2(N1+N2)) and S(n) = O(N1+N2) 
@@ -16,20 +18,30 @@ Approach:
 
 # Add two numbers represented by linked lists.
 # T(n) = O(max(N1,N2)) and S(n) = O(max(N1,N2))
-class Solution:
-    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+class Solution:    
+    def addTwoNumbers(self, l1, l2) -> [ListNode]:
+        tail1 = self.reverse(l1)
+        tail2 = self.reverse(l2)
+        newhead = temp = ListNode(0)
         carry = 0
-        ans = dummy = ListNode(0)
-        while(l1 or l2 or carry):
-            if l1:
-                carry += l1.val
-                l1 = l1.next
-            if l2:
-                carry += l2.val
-                l2 = l2.next
-            dummy.next = ListNode(carry % 10)
-            dummy= dummy.next
+        while(tail1 or tail2 or carry):
+            if tail1:
+                carry += tail1.val
+                tail1 = tail1.next 
+            if tail2:
+                carry += tail2.val
+                tail2 = tail2.next
+            temp.next = ListNode(carry % 10)
+            temp = temp.next
             carry = carry//10
-        return ans.next
-
-
+        return self.reverse(newhead.next)
+    
+    def reverse(self, head):
+        if (not head  or not head.next): return head
+        prev = None
+        while head :
+            nxt = head.next
+            head.next = prev
+            prev = head
+            head = nxt
+        return prev
